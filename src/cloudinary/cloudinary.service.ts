@@ -1,12 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, HttpStatus, HttpException } from '@nestjs/common';
 import { Cloudinary } from './cloudinary.provider';
+import * as fs from 'fs';
 
 @Injectable()
 export class CloudinaryService {
-  constructor(@Inject(Cloudinary) private cloudinary) {
-    console.log('This is the cloudinary instance:');
-    // console.log(this.cloudinary)
-  }
+  constructor(@Inject(Cloudinary) private cloudinary) {}
 
   async uploadImage(path: string): Promise<any> {
     this.cloudinary.config({
@@ -16,11 +14,12 @@ export class CloudinaryService {
     });
 
     const result = await this.cloudinary.uploader.upload(path, function(
-      error: any,
       result: any,
+      error: any,
     ) {
-      console.log(error);
-      console.log(result);
+      fs.unlink(path, err => {
+        console.log('Deteled!!');
+      });
     });
 
     return result;

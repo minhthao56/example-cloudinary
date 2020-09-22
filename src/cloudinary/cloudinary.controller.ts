@@ -17,5 +17,6 @@ export class CloudinaryController {
   @UseInterceptors(FileInterceptor('file'))
   async upload(@UploadedFile() file) {
     console.log(file);
+    return await this.cloudinaryService.uploadImage(file.path);
   }
 }
